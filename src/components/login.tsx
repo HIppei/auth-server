@@ -7,9 +7,9 @@ import Authenticated from './authenticated';
 
 Amplify.configure({
   Auth: {
-    region: 'ap-northeast-1',
-    userPoolId: 'ap-northeast-1_ucp8tMk4K',
-    userPoolWebClientId: '4n5fjc6qf88sbgfhq9gj7mur21',
+    region: process.env.NEXT_PUBLIC_REGION,
+    userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID,
+    userPoolWebClientId: process.env.NEXT_PUBLIC_USER_POOL_WEB_CLIENT_ID,
   },
 });
 
