@@ -1,4 +1,4 @@
-import { AccessCredentials } from '@/constants/app-type';
+import type { AccessCredentials } from '@/constants/app-type';
 
 type CodeGrantRecord = {
   [code: string]: AccessCredentials;
@@ -16,5 +16,18 @@ class DataStore {
   }
 }
 
-const dataStore = new DataStore();
+declare global {
+  var dataStore: DataStore;
+}
+
+let dataStore: DataStore;
+if (process.env.NODE_ENV === 'production') {
+  dataStore = new DataStore();
+} else {
+  if (!global.dataStore) {
+    global.dataStore = new DataStore();
+  }
+  dataStore = global.dataStore;
+}
+
 export default dataStore;

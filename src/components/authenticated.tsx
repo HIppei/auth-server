@@ -20,11 +20,13 @@ export default function Authenticated() {
           idToken: session.getIdToken().getJwtToken(),
           refreshToken: session.getRefreshToken().getToken(),
           clientId: searchParams.get('client_id') as string,
+          challenge: searchParams.get('code_challenge') as string,
+          challengeMethod: searchParams.get('code_challenge_method') as string,
         };
 
         const res = await fetch('api/session', {
           method: 'POST',
-          body: JSON.stringify({ accessCredentials }),
+          body: JSON.stringify(accessCredentials),
         });
 
         if (!res.ok) throw new Error('Authentication failure');

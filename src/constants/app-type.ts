@@ -3,4 +3,6 @@ export type AccessCredentials = {
   idToken: string;
   refreshToken: string;
   clientId: string;
+  challenge: string;
+  challengeMethod: string;
 };

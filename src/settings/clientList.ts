@@ -4,7 +4,7 @@ export const clientList: {
   12345: {
     redirect_urls: 'http://localhost:3001/callback',
     scope: 'openid profile email',
-    client_secret: 'secret',
+    client_secret: process.env.CLIENT_SECRET_1 as string,
     grant_type: 'authorization_code',
   },
   6789: {

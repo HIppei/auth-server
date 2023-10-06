@@ -7,8 +7,11 @@ export default function Page({ searchParams }: { searchParams: { [key: string]: 
   const responseType = searchParams.response_type;
   const clientId = searchParams.client_id as string;
   const redirectUri = searchParams.redirect_uri;
+  const challenge = searchParams.code_challenge;
+  const challengeMethod = searchParams.code_challenge_method;
 
-  if (!scope || !responseType || !clientId || !redirectUri) return <div>Wrong request configuration.</div>;
+  if (!scope || !responseType || !clientId || !redirectUri || !challenge || !challengeMethod)
+    return <div>Wrong request configuration.</div>;
 
   const appClient = clientList[clientId];
 
