@@ -19,8 +19,6 @@ export default function Page({ searchParams }: { searchParams: { [key: string]: 
   if (appClient.scope !== scope) return <div>Unknown client.</div>;
   if (appClient.redirect_urls !== redirectUri) return <div>Unknown client.</div>;
 
-  // TODO: Check current session
-
   return (
     <div>
       <Login />

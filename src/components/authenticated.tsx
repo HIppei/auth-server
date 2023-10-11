@@ -1,6 +1,6 @@
 'use client';
 
-import { AccessCredentials } from '@/constants/app-type';
+import { AccessCredentials } from '@/types/app-type';
 import { Auth } from 'aws-amplify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,18 +13,26 @@ export default function Authenticated() {
   useEffect(() => {
     const approve = async () => {
       try {
-        // Establish session and get authorization code
-        const session = await Auth.currentSession();
+        // Get authorization code
+        const keyPrefix = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_USER_POOL_WEB_CLIENT_ID}`;
+        const userName = localStorage.getItem(`${keyPrefix}.LastAuthUser`);
+        const idToken = localStorage.getItem(`${keyPrefix}.${userName}.idToken`);
+        const accessToken = localStorage.getItem(`${keyPrefix}.${userName}.accessToken`);
+        const refreshToken = localStorage.getItem(`${keyPrefix}.${userName}.refreshToken`);
+
+        if (!userName || !idToken || !accessToken || !refreshToken) throw new Error('Authentication failure');
+
         const accessCredentials: AccessCredentials = {
-          accessToken: session.getAccessToken().getJwtToken(),
-          idToken: session.getIdToken().getJwtToken(),
-          refreshToken: session.getRefreshToken().getToken(),
+          userName: userName,
+          idToken: idToken,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
           clientId: searchParams.get('client_id') as string,
           challenge: searchParams.get('code_challenge') as string,
           challengeMethod: searchParams.get('code_challenge_method') as string,
         };
 
-        const res = await fetch('api/session', {
+        const res = await fetch('api/code', {
           method: 'POST',
           body: JSON.stringify(accessCredentials),
         });

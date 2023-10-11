@@ -1,33 +1,38 @@
-import type { AccessCredentials } from '@/constants/app-type';
+import type { AccessCredentials } from '@/types/app-type';
 
 type CodeGrantRecord = {
   [code: string]: AccessCredentials;
 };
 
-class DataStore {
+class DataStoreClass {
   records: CodeGrantRecord;
 
   constructor() {
     this.records = {};
   }
 
+  // TODO: An authorization code expiration
   insert(code: string, accessCredentials: AccessCredentials) {
     this.records[code] = accessCredentials;
+  }
+
+  remove(code: string) {
+    delete this.records[code];
   }
 }
 
 declare global {
-  var dataStore: DataStore;
+  var dataStore: DataStoreClass;
 }
 
-let dataStore: DataStore;
+let DataStore: DataStoreClass;
 if (process.env.NODE_ENV === 'production') {
-  dataStore = new DataStore();
+  DataStore = new DataStoreClass();
 } else {
   if (!global.dataStore) {
-    global.dataStore = new DataStore();
+    global.dataStore = new DataStoreClass();
   }
-  dataStore = global.dataStore;
+  DataStore = global.dataStore;
 }
 
-export default dataStore;
+export default DataStore;
