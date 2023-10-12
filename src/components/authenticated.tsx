@@ -1,10 +1,10 @@
 'use client';
 
 import { AccessCredentials } from '@/types/app-type';
-import { Auth } from 'aws-amplify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import Login from './login';
+import { Auth } from 'aws-amplify';
 
 export default function Authenticated() {
   const searchParams = useSearchParams();
@@ -13,17 +13,16 @@ export default function Authenticated() {
   useEffect(() => {
     const approve = async () => {
       try {
-        // Get authorization code
-        const keyPrefix = `CognitoIdentityServiceProvider.${process.env.NEXT_PUBLIC_USER_POOL_WEB_CLIENT_ID}`;
-        const userName = localStorage.getItem(`${keyPrefix}.LastAuthUser`);
-        const idToken = localStorage.getItem(`${keyPrefix}.${userName}.idToken`);
-        const accessToken = localStorage.getItem(`${keyPrefix}.${userName}.accessToken`);
-        const refreshToken = localStorage.getItem(`${keyPrefix}.${userName}.refreshToken`);
+        const session = await Auth.currentSession();
 
-        if (!userName || !idToken || !accessToken || !refreshToken) throw new Error('Authentication failure');
+        const idToken = session.getIdToken().getJwtToken();
+        const accessToken = session.getAccessToken().getJwtToken();
+        const refreshToken = session.getRefreshToken().getToken();
+
+        // TODO: Standirdize error handling
+        if (!idToken || !accessToken || !refreshToken) throw new Error('Authentication failure');
 
         const accessCredentials: AccessCredentials = {
-          userName: userName,
           idToken: idToken,
           accessToken: accessToken,
           refreshToken: refreshToken,
@@ -43,7 +42,7 @@ export default function Authenticated() {
         const code = result.code;
 
         // Redirect to the client
-        const state = searchParams.get('state') as string;
+        const state = searchParams.get('state') ?? '';
         const params = new URLSearchParams({ code: code, state: state });
         const redirectUri = `${searchParams.get('redirect_uri')}?${params.toString()}`;
 

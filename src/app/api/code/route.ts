@@ -1,7 +1,6 @@
-import { AccessCredentials } from '@/types/app-type';
 import DataStore from '@/data-store/data-store';
+import { AccessCredentials } from '@/types/app-type';
 import { createHash } from 'crypto';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 const sessionSecret = process.env.SESSION_SECRET;

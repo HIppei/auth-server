@@ -15,6 +15,7 @@ export default function Page({ searchParams }: { searchParams: { [key: string]: 
 
   const appClient = clientList[clientId];
 
+  // TODO: Standardize error responses
   if (!appClient) return <div>Unknown client.</div>;
   if (appClient.scope !== scope) return <div>Unknown client.</div>;
   if (appClient.redirect_urls !== redirectUri) return <div>Unknown client.</div>;

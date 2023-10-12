@@ -14,6 +14,7 @@ export async function POST(req: Request) {
     [clientId, clientSecret] = authorization.split(' ')[1].split(':');
   }
 
+  // TODO: Standardize errro responses
   if (!clientId || !clientSecret) return NextResponse.json({ error: 'invalid_client' }, { status: 401 });
 
   // Check contents
@@ -21,11 +22,13 @@ export async function POST(req: Request) {
   const grantType = body.grant_type;
   const verifier = body.code_verifier;
 
-  if (!code || !grantType || !verifier) return NextResponse.json({ error: 'invalid_client' }, { status: 401 });
+  if (!code || !grantType || !verifier) return NextResponse.json({ error: 'invalid_request' }, { status: 401 });
 
   const appClient = clientList[clientId];
-  if (!appClient || appClient.client_secret !== clientSecret)
+  if (!appClient || appClient.client_secret !== clientSecret) {
+    console.log('Linked client not found', clientId);
     return NextResponse.json({ error: 'invalid_client' }, { status: 401 });
+  }
   if (appClient.grant_type !== grantType)
     return NextResponse.json({ error: 'unsupported_grant_type' }, { status: 400 });
 

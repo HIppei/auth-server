@@ -10,7 +10,7 @@ export const clientList: {
   6789: {
     redirect_urls: 'http://localhost:3002/callback',
     scope: 'openid profile email',
-    client_secret: 'secret',
+    client_secret: process.env.CLIENT_SECRET as string,
     grant_type: 'authorization_code',
   },
 };

@@ -23,10 +23,10 @@ export default function Login() {
       try {
         const cognitoUser = await Auth.currentUserPoolUser();
         if (cognitoUser instanceof CognitoUser) {
-          await new Promise((resolve) => {
+          await new Promise<void>((resolve) => {
             cognitoUser.getUserAttributes(async (err) => {
               if (err) await Auth.signOut();
-              resolve('complete');
+              resolve();
             });
           });
         }
